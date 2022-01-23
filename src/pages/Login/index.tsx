@@ -4,17 +4,47 @@ import {
   VStack,
   Flex,
   Heading,
-  Image,
   HStack,
   Text,
   Button,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Input } from "../../components/Input";
+import ShoppingBag from "../../assets/shopping-bag.svg";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useAuth } from "../../context/AuthContext";
+import { useHistory } from "react-router-dom";
+
+const signInSchema = yup.object().shape({
+  email: yup.string().required("email obrigaorio").email("email invalido"),
+  password: yup.string().required("senha obrigatoria"),
+});
+
+interface SignInData {
+  email: string;
+  password: string;
+}
 
 export const Login = () => {
   const [loading, setLoading] = useState(false);
+  const { signIn, accessToken } = useAuth();
+  const {
+    formState: { errors },
+    register,
+    handleSubmit,
+  } = useForm<SignInData>({
+    resolver: yupResolver(signInSchema),
+  });
+  const handleSignIn = (data: SignInData) => {
+    setLoading(true);
+    signIn(data)
+      .then((_) => setLoading(false))
+      .catch((err) => setLoading(false));
+  };
+
+  const history = useHistory();
 
   return (
     <Flex
@@ -32,16 +62,17 @@ export const Login = () => {
         alignItems="center"
       >
         <Flex
-          padding="30px 15px"
+          padding={["10px 0px", "10px 0px", "30px 15px", "30px 15px"]}
           bg="white"
           flexDirection={["column", "column", "row-reverse", "row-reverse"]}
           justifyContent="center"
+          alignItems="center"
           mt={["4", "4", "0"]}
-          w={["100%", "100%", "80%", "65%"]}
+          w={["100%", "100%", "80%", "70%"]}
         >
           <VStack
             padding="15px 15px"
-            maxWidth="420px"
+            maxWidth="380px"
             alignSelf="center"
             spacing="5"
           >
@@ -55,7 +86,12 @@ export const Login = () => {
             </HStack>
             <HStack>
               <figure>
-                <img alt="caixa box" />
+                <img
+                  alt="caixa box"
+                  src={ShoppingBag}
+                  width="50px"
+                  height="50px"
+                />
               </figure>
               <figcaption>
                 A vida é como um sanduíche, é preciso recheá-la com os{" "}
@@ -70,19 +106,33 @@ export const Login = () => {
 
           <Grid
             border="3px solid"
-            borderColor="gray.100"
-            minWidth="370px"
+            width="100%"
+            maxWidth="540px"
+            borderColor="gray.400"
+            minWidth={["280px", "280px", "370px", "370px"]}
             mt="5"
             padding="15px 15px"
           >
             <Heading as="h3">Login</Heading>
             <VStack spacing="5" mt="4" display="flex">
               <Box w="100%">
-                <Input name="algo1" />
+                <Input
+                  placeholder="Digite seu login"
+                  type="email"
+                  label="Login"
+                  error={errors.email}
+                  {...register("email")}
+                />
                 <Text>messagem</Text>
               </Box>
               <Box w="100%">
-                <Input name="algo2" />
+                <Input
+                  type="password"
+                  placeholder="Digite sua senha"
+                  label="Senha"
+                  error={errors.password}
+                  {...register("password")}
+                />
                 <Text>messagem</Text>
               </Box>
             </VStack>
@@ -94,6 +144,7 @@ export const Login = () => {
                 color="white"
                 h="60px"
                 borderRadius="8px"
+                onClick={() => history.push("/Dashboard")}
                 _hover={{
                   background: "green.300",
                 }}
@@ -110,6 +161,7 @@ export const Login = () => {
                 color="gray.500"
                 h="60px"
                 borderRadius="8px"
+                onClick={() => history.push("/Register")}
                 _hover={{
                   background: "gray.500",
                   color: "white",

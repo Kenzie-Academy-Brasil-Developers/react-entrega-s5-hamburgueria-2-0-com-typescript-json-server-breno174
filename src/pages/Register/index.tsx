@@ -12,6 +12,13 @@ import {
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Input } from "../../components/Input";
+import ShoppingBag from "../../assets/shopping-bag.svg";
+import {
+  DeepMap,
+  FieldError,
+  UseFormRegister,
+  FieldValues,
+} from "react-hook-form";
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -45,20 +52,18 @@ export const Register = () => {
     resolver: yupResolver(signUpSchema),
   });
 
-  //  const handleSignup = ({ name, email, password }: SignUpData) => {
-  //    setLoading(true);
+  const handleSignup = ({ name, email, password }: SignUpData) => {
+    setLoading(true);
 
-  //    api
-  //      .post("/register", { name, email, password })
-  //      .then((response) => {
-  //        setLoading(false);
-  //        onModalSuccessOpen();
-  //      })
-  //      .catch((err) => {
-  //        setLoading(false);
-  //        onModalErrorOpen();
-  //      });
-  //  };
+    api
+      .post("/register", { name, email, password })
+      .then((response) => {
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
+  };
 
   const history = useHistory();
 
@@ -78,16 +83,17 @@ export const Register = () => {
         alignItems="center"
       >
         <Flex
-          padding="30px 15px"
+          padding={["10px 0px", "10px 0px", "30px 15px", "30px 15px"]}
           bg="white"
           flexDirection={["column", "column", "row", "row"]}
           justifyContent="center"
+          alignItems="center"
           mt={["4", "4", "0"]}
-          w={["100%", "100%", "80%", "65%"]}
+          w={["100%", "100%", "80%", "70%"]}
         >
           <VStack
             padding="15px 15px"
-            maxWidth="420px"
+            maxWidth="380px"
             alignSelf="center"
             spacing="5"
           >
@@ -101,7 +107,12 @@ export const Register = () => {
             </HStack>
             <HStack>
               <figure>
-                <img alt="caixa box" />
+                <img
+                  alt="caixa box"
+                  src={ShoppingBag}
+                  width="50px"
+                  height="50px" //quando diminuo a tela meu icone está diminuindo o tamanho, por que?
+                />
               </figure>
               <figcaption>
                 A vida é como um sanduíche, é preciso recheá-la com os{" "}
@@ -116,8 +127,10 @@ export const Register = () => {
 
           <Grid
             border="3px solid"
-            borderColor="gray.100"
-            minWidth="370px"
+            width="100%"
+            maxWidth="540px"
+            borderColor="gray.400"
+            minWidth={["280px", "280px", "370px", "370px"]}
             mt="5"
             padding="15px 15px"
           >
@@ -151,6 +164,7 @@ export const Register = () => {
                 color="white"
                 h="60px"
                 borderRadius="8px"
+                onClick={() => history.push("/")}
                 _hover={{
                   background: "green.300",
                 }}
@@ -158,19 +172,6 @@ export const Register = () => {
               >
                 Cadastrar
               </Button>
-              {/* <Button
-                 bg="gray.100"
-                 w="100%"
-                 color="gray.300"
-                 h="60px"
-                 borderRadius="8px"
-                 //onClick={() => history.push("/signup")}
-                 _hover={{
-                   background: "gray.200",
-                 }}
-               >
-                 Cadastrar
-               </Button> */}
             </VStack>
           </Grid>
         </Flex>
