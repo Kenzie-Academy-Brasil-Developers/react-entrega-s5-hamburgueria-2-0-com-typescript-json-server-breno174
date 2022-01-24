@@ -19,7 +19,10 @@ import { useHistory } from "react-router-dom";
 
 const signInSchema = yup.object().shape({
   email: yup.string().required("email obrigaorio").email("email invalido"),
-  password: yup.string().required("senha obrigatoria"),
+  password: yup
+    .string()
+    .required("senha obrigatoria")
+    .min(6, "minimo de 6 digitos"),
 });
 
 interface SignInData {
@@ -37,7 +40,9 @@ export const Login = () => {
   } = useForm<SignInData>({
     resolver: yupResolver(signInSchema),
   });
+
   const handleSignIn = (data: SignInData) => {
+    console.log(data)
     setLoading(true);
     signIn(data)
       .then((_) => setLoading(false))
@@ -105,6 +110,8 @@ export const Login = () => {
           </VStack>
 
           <Grid
+            as="form"
+            onSubmit={handleSubmit(handleSignIn)}
             border="3px solid"
             width="100%"
             maxWidth="540px"
@@ -123,7 +130,6 @@ export const Login = () => {
                   error={errors.email}
                   {...register("email")}
                 />
-                <Text>messagem</Text>
               </Box>
               <Box w="100%">
                 <Input
@@ -133,7 +139,6 @@ export const Login = () => {
                   error={errors.password}
                   {...register("password")}
                 />
-                <Text>messagem</Text>
               </Box>
             </VStack>
             <VStack mt="4" spacing="5" textAlign="center">
@@ -144,7 +149,6 @@ export const Login = () => {
                 color="white"
                 h="60px"
                 borderRadius="8px"
-                onClick={() => history.push("/Dashboard")}
                 _hover={{
                   background: "green.300",
                 }}
@@ -157,6 +161,7 @@ export const Login = () => {
               </Text>
               <Button
                 bg="gray.200"
+                type="submit"
                 w="100%"
                 color="gray.500"
                 h="60px"

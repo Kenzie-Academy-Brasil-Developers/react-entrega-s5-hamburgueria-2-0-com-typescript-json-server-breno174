@@ -1,8 +1,3 @@
-// import { Input as ChakraInput } from "@chakra-ui/react";
-
-// export const InputBase = () => {
-//   return <ChakraInput></ChakraInput>;
-// };
 import {
   FormControl,
   FormErrorMessage,

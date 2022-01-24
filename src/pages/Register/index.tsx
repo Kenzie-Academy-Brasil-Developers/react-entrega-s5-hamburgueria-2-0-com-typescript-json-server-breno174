@@ -13,12 +13,12 @@ import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Input } from "../../components/Input";
 import ShoppingBag from "../../assets/shopping-bag.svg";
-import {
-  DeepMap,
-  FieldError,
-  UseFormRegister,
-  FieldValues,
-} from "react-hook-form";
+// import {
+//   DeepMap,
+//   FieldError,
+//   UseFormRegister,
+//   FieldValues,
+// } from "react-hook-form";
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -29,16 +29,21 @@ interface SignUpData {
   email: string;
   password: string;
   name: string;
+  confirm_password: string;
 }
 
 const signUpSchema = yup.object().shape({
   name: yup.string().required("Nome obrigatório"),
   email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
-  password: yup.string().required("Senha obrigatória"),
+  password: yup
+    .string()
+    .required("Senha obrigatória")
+    .min(6, "minimo de 6 digitos"),
   confirm_password: yup
     .string()
     .required("Confirmação de senha obrigatória")
-    .oneOf([yup.ref("password")], "Senhas diferentes"),
+    .oneOf([yup.ref("password")], "Senhas diferentes")
+    .min(6, "minimo de 6 digitos"),
 });
 
 export const Register = () => {
@@ -126,6 +131,8 @@ export const Register = () => {
           </VStack>
 
           <Grid
+            as="form"
+            onSubmit={handleSubmit(handleSignup)}
             border="3px solid"
             width="100%"
             maxWidth="540px"
@@ -140,20 +147,40 @@ export const Register = () => {
             </HStack>
             <VStack spacing="5" mt="4" display="flex">
               <Box w="100%">
-                <Input name="name" />
-                <Text>messagem</Text>
+                <Input
+                  placeholder="Digite seu nome"
+                  type="text"
+                  label="Nome"
+                  error={errors.name}
+                  {...register("name")}
+                />
               </Box>
               <Box w="100%">
-                <Input name="email" />
-                <Text>messagem</Text>
+                <Input
+                  placeholder="Digite seu email"
+                  type="email"
+                  label="Email"
+                  error={errors.email}
+                  {...register("email")}
+                />
               </Box>
               <Box w="100%">
-                <Input name="password" />
-                <Text>messagem</Text>
+                <Input
+                  placeholder="Digite sua senha"
+                  type="password"
+                  label="Senha"
+                  error={errors.password}
+                  {...register("password")}
+                />
               </Box>
               <Box w="100%">
-                <Input name="confirm_password" />
-                <Text>messagem</Text>
+                <Input
+                  placeholder="Repita sua senha"
+                  type="password"
+                  label="Confirmar senha"
+                  error={errors.confirm_password}
+                  {...register("confirm_password")}
+                />
               </Box>
             </VStack>
             <VStack mt="4" spacing="5" textAlign="center">
@@ -164,7 +191,6 @@ export const Register = () => {
                 color="white"
                 h="60px"
                 borderRadius="8px"
-                onClick={() => history.push("/")}
                 _hover={{
                   background: "green.300",
                 }}

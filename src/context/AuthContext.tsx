@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import {
   createContext,
   ReactNode,
@@ -24,13 +25,23 @@ interface AuthState {
 interface AuthContextData {
   user: User;
   accessToken: string;
+  product: IProduts[];
   signIn: (credentials: SignInCredentials) => Promise<void>;
   signOut: () => void;
+  produtsList: (userId: string, accessToken: string) => Promise<void>;
 }
+
 interface User {
   email: string;
   id: string;
   name: string;
+}
+interface IProduts {
+  titulo: string;
+  categoria: string;
+  imagem: string;
+  preco: number;
+  id: number;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -46,6 +57,8 @@ const useAuth = () => {
 };
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [product, setProduct] = useState<IProduts[]>([]);
+
   const [data, setData] = useState<AuthState>(() => {
     const accessToken = localStorage.getItem("@Hamburguer:accessToken");
     const user = localStorage.getItem("@Hamburguer:user");
@@ -56,6 +69,22 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     return {} as AuthState;
   });
+
+  const produtsList = useCallback(
+    async (userId: string, acessToken: string) => {
+      try {
+        const response = await api.get(`/produtos?userId=${userId}`, {
+          headers: {
+            Authorization: `Bearer ${acessToken}`,
+          },
+        });
+        setProduct(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    []
+  );
 
   const signIn = useCallback(async ({ email, password }: SignInCredentials) => {
     const response = await api.post("/login", { email, password });
@@ -82,6 +111,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         accessToken: data.accessToken,
         signIn: signIn,
         signOut: signOut,
+        produtsList,
+        product,
       }}
     >
       {children}
