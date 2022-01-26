@@ -13,12 +13,6 @@ import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Input } from "../../components/Input";
 import ShoppingBag from "../../assets/shopping-bag.svg";
-// import {
-//   DeepMap,
-//   FieldError,
-//   UseFormRegister,
-//   FieldValues,
-// } from "react-hook-form";
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -64,6 +58,7 @@ export const Register = () => {
       .post("/register", { name, email, password })
       .then((response) => {
         setLoading(false);
+        history.push("/");
       })
       .catch((err) => {
         setLoading(false);
@@ -103,10 +98,10 @@ export const Register = () => {
             spacing="5"
           >
             <HStack alignItems="flex-end">
-              <Heading as="h2" color="red.400">
+              <Heading as="h2" color="gray.700">
                 Burguer
               </Heading>
-              <Text color="gray.700">
+              <Text color="red.400" fontSize="20px">
                 <b>Kenzie</b>
               </Text>
             </HStack>

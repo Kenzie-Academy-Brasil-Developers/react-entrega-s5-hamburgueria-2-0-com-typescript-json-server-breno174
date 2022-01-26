@@ -10,6 +10,7 @@ import {
   Text,
   VStack,
   Input,
+  Image,
 } from "@chakra-ui/react";
 //import { Search2Icon, ExternalLinkIcon } from "@chakra-ui/icons";
 import {
@@ -27,6 +28,11 @@ interface ListProps {
   produto: Array<ProdutosProps>[];
 }
 
+interface UserProps {
+  accessToken: string;
+  userId: string;
+}
+
 interface ProdutosProps {
   titulo: string;
   id: number;
@@ -38,7 +44,12 @@ interface ProdutosProps {
 export const Dashboard = () => {
   const [filter, setFilter] = useState("");
   const history = useHistory();
-  const { produtsList, product } = useAuth();
+  const { produtsList, product, signOut, user, accessToken } = useAuth();
+
+  //produtsList(accessToken, user.id);
+
+  console.log(product);
+  console.log(user, "usuario");
   return (
     <Flex
       padding={["10px 15px", "10 15px", "0px", "0px"]}
@@ -101,17 +112,32 @@ export const Dashboard = () => {
             as={AiOutlineShoppingCart}
             fontSize={["25px", "25px", "33px", "33px"]}
             onClick={() => {}}
+            cursor="pointer"
           />
           <Icon
             as={AiOutlineExport}
             fontSize={["25px", "25px", "33px", "33px"]}
-            onClick={() => {}}
+            onClick={() => signOut()}
+            cursor="pointer"
           />
         </HStack>
       </HStack>
       <Box w="100%" h="89%" mt="5">
-        <Flex justifyContent="center" alignItems="center">
-          <Grid padding="20px" m="5" />
+        <Flex
+          justifyContent={["flex-start", "flex-start", "center", "center"]}
+          alignItems="center"
+          wrap={["nowrap", "nowrap", "wrap", "wrap"]}
+          overflowX={["scroll", "scroll", "auto", "auto"]}
+          gap={4}
+        >
+          <Card categoria="sanduiche" preco={4} titulo="x-burguer" />
+          <Card categoria="sanduiche" preco={4} titulo="x-queijo" />
+          <Card categoria="sanduiche" preco={4} titulo="x-bacon" />
+          <Card categoria="sanduiche" preco={4} titulo="x-bacon" />
+          <Card categoria="sanduiche" preco={4} titulo="x-bacon" />
+          <Card categoria="sanduiche" preco={4} titulo="x-bacon" />
+          <Card categoria="sanduiche" preco={4} titulo="x-bacon" />
+          <Card categoria="sanduiche" preco={4} titulo="x-bacon" />
         </Flex>
       </Box>
     </Flex>
@@ -129,4 +155,17 @@ export const Dashboard = () => {
             />
           ))}
         </Flex>
+
+      <Grid
+          w="100%"
+          templateColumns="repeat(auto-fill, minmax(250px, 1fr)"
+          gap={10}
+          paddingX="5"
+          mt="4"
+        >
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((_) => (
+            <Card categoria="sanduiche" preco={4} titulo="x-burguer" />
+          ))}
+        </Grid>
+
      */

@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { api } from "../services/api";
+import { toast } from "react-hot-toast";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -87,14 +88,20 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   const signIn = useCallback(async ({ email, password }: SignInCredentials) => {
-    const response = await api.post("/login", { email, password });
+    try {
+      const response = await api.post("/login", { email, password });
+      console.log(response, "\n Resposta do post login");
+      const { accessToken, user } = response.data;
 
-    const { accessToken, user } = response.data;
+      localStorage.setItem("@Hamburguer:accessToken", accessToken);
+      localStorage.setItem("@Hamburguer:user", JSON.stringify(user));
 
-    localStorage.setItem("@Hamburguer:accessToken", accessToken);
-    localStorage.setItem("@Hamburguer:user", JSON.stringify(user));
+      setData({ accessToken, user });
 
-    setData({ accessToken, user });
+      await produtsList(accessToken, user.id);
+    } catch {
+      toast.error("email ou senha invalidos");
+    }
   }, []);
 
   const signOut = useCallback(() => {
@@ -110,7 +117,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         user: data.user,
         accessToken: data.accessToken,
         signIn: signIn,
-        signOut: signOut,
+        signOut,
         produtsList,
         product,
       }}

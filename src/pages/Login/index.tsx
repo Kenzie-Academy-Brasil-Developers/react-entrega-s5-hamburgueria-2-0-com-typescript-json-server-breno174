@@ -6,11 +6,12 @@ import {
   Heading,
   HStack,
   Text,
+  Icon,
   Button,
 } from "@chakra-ui/react";
+import { AiFillShopping } from "react-icons/ai";
 import { useState } from "react";
 import { Input } from "../../components/Input";
-import ShoppingBag from "../../assets/shopping-bag.svg";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -32,7 +33,7 @@ interface SignInData {
 
 export const Login = () => {
   const [loading, setLoading] = useState(false);
-  const { signIn, accessToken } = useAuth();
+  const { signIn } = useAuth();
   const {
     formState: { errors },
     register,
@@ -42,7 +43,6 @@ export const Login = () => {
   });
 
   const handleSignIn = (data: SignInData) => {
-    console.log(data)
     setLoading(true);
     signIn(data)
       .then((_) => setLoading(false))
@@ -82,22 +82,15 @@ export const Login = () => {
             spacing="5"
           >
             <HStack alignItems="flex-end">
-              <Heading as="h2" color="red.400">
+              <Heading as="h2" color="gray.700">
                 Burguer
               </Heading>
-              <Text color="gray.700">
+              <Text color="red.400" fontSize="20px">
                 <b>Kenzie</b>
               </Text>
             </HStack>
             <HStack>
-              <figure>
-                <img
-                  alt="caixa box"
-                  src={ShoppingBag}
-                  width="50px"
-                  height="50px"
-                />
-              </figure>
+              <Icon as={AiFillShopping} color="green.300" fontSize="35px" />
               <figcaption>
                 A vida é como um sanduíche, é preciso recheá-la com os{" "}
                 <b>melhores</b> ingredientes.
