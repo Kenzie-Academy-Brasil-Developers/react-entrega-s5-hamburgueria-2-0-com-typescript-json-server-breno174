@@ -3,14 +3,12 @@ import {
   Button,
   Center,
   Flex,
-  Grid,
   Heading,
   HStack,
   Icon,
   Text,
   VStack,
   Input,
-  Image,
 } from "@chakra-ui/react";
 //import { Search2Icon, ExternalLinkIcon } from "@chakra-ui/icons";
 import {
@@ -20,19 +18,23 @@ import {
 } from "react-icons/ai";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-//import { Input } from "../../components/Input";
+import { Carrinho } from "../../components/Modal/ModalCarrinho";
 import { useAuth } from "../../context/AuthContext";
-import { Card } from "../../components/cards";
+import { Card } from "../../components/cards/cards";
 import { useEffect } from "react";
+//import { VerticallyCenter } from "../../components/Modal/ModalExemplo";
+import { carrAuth } from "../../context/carrinhoContext";
 
-interface ListProps {
-  produto: Array<ProdutosProps>[];
-}
-
-interface UserProps {
-  accessToken: string;
-  userId: string;
-}
+/**
+ interface ListProps {
+   produto: Array<ProdutosProps>[];
+ }
+ 
+ interface UserProps {
+   accessToken: string;
+   userId: string;
+ } 
+ */
 
 interface ProdutosProps {
   titulo: string;
@@ -43,19 +45,26 @@ interface ProdutosProps {
 }
 
 export const Dashboard = () => {
-  const [filter, setFilter] = useState("");
+  const [isFilter, setIsFilter] = useState(false);
+  const [filterValue, setFilterValue] = useState("");
   const history = useHistory();
+
+  //oque fazer com o filterValue ?
+
   const { produtsList, product, signOut, user, accessToken } = useAuth();
+
+  const { carrinho, closeCarr, openCarr, carrProd, modalCarr } = carrAuth();
+
   useEffect(() => {
     produtsList(accessToken, user.id);
+    carrinho(accessToken, user.id);
   }, []);
-  //produtsList(accessToken, user.id);
 
   console.log(product);
   console.log(user, "usuario");
   return (
     <Flex
-      padding={["10px 15px", "10 15px", "0px", "0px"]}
+      padding={["0px", "0px", "0px", "0px"]}
       alignItems="flex-start"
       flexDirection="column"
       w="100%"
@@ -63,13 +72,15 @@ export const Dashboard = () => {
       color="gray.500"
       height={["auto", "auto", "100vh", "100vh"]}
     >
+      {modalCarr ? <Carrinho /> : false}
       <HStack
         w="100%"
         justifyContent="space-between"
-        mt="4"
+        paddingY="3"
+        bg="gray.300"
         flexDirection={["column", "column", "row", "row"]}
       >
-        <Box padding={["0px 10px", "0px 10px", "0px 60px", "0px 60px"]}>
+        <Box padding={["0px 10px", "0px 10px", "0px 50px", "0px 50px"]}>
           <HStack alignItems="flex-end">
             <Heading as="h3" color="gray.700">
               Burguer
@@ -82,7 +93,7 @@ export const Dashboard = () => {
 
         <HStack paddingRight={["10px", "10px", "60px", "60px"]} spacing="4">
           <HStack
-            bg="gray.300"
+            bg="white"
             borderRadius="8px"
             border="1px solid gray.600"
             padding="8px"
@@ -90,7 +101,7 @@ export const Dashboard = () => {
             <Input
               bg="transparent"
               border="none"
-              onChange={(e) => setFilter(e.target.value)}
+              onChange={(e) => setFilterValue(e.target.value)}
               h="50px"
               size="lg"
             />
@@ -107,16 +118,25 @@ export const Dashboard = () => {
                 as={AiOutlineSearch}
                 color="white"
                 fontSize="25px"
-                onClick={() => {}}
+                onClick={() => setIsFilter(true)}
               />
             </Center>
           </HStack>
-          <Icon
-            as={AiOutlineShoppingCart}
-            fontSize={["25px", "25px", "33px", "33px"]}
-            onClick={() => {}}
-            cursor="pointer"
-          />
+          {!modalCarr ? (
+            <Icon
+              as={AiOutlineShoppingCart}
+              fontSize={["25px", "25px", "33px", "33px"]}
+              onClick={() => openCarr()}
+              cursor="pointer"
+            />
+          ) : (
+            <Icon
+              as={AiOutlineShoppingCart}
+              fontSize={["25px", "25px", "33px", "33px"]}
+              onClick={() => closeCarr()}
+              cursor="pointer"
+            />
+          )}
           <Icon
             as={AiOutlineExport}
             fontSize={["25px", "25px", "33px", "33px"]}
@@ -125,7 +145,7 @@ export const Dashboard = () => {
           />
         </HStack>
       </HStack>
-      <Box w="100%" h="89%" mt="5">
+      <Box w="100%" h="89%" mt="5" paddingX="15px">
         <Flex
           justifyContent={["flex-start", "flex-start", "center", "center"]}
           alignItems="center"
@@ -133,15 +153,25 @@ export const Dashboard = () => {
           overflowX={["scroll", "scroll", "auto", "auto"]}
           gap={4}
         >
-          {product.map((card) => (
-            <Card
-              key={card.id}
-              categoria={card.categoria}
-              preco={card.preco}
-              titulo={card.categoria}
-              imagem={card.imagem}
-            />
-          ))}
+          {isFilter
+            ? carrProd.map((card) => (
+                <Card
+                  key={card.id}
+                  categoria={card.categoria}
+                  preco={card.preco}
+                  titulo={card.categoria}
+                  imagem={card.imagem}
+                />
+              ))
+            : product.map((card) => (
+                <Card
+                  key={card.id}
+                  categoria={card.categoria}
+                  preco={card.preco}
+                  titulo={card.categoria}
+                  imagem={card.imagem}
+                />
+              ))}
         </Flex>
       </Box>
     </Flex>

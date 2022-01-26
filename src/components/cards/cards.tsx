@@ -1,5 +1,6 @@
 import { Flex, Box, Grid, Button, Image, Text } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
+import { theme } from "../theme/theme";
 
 interface CardProps {
   titulo: string;
@@ -36,8 +37,10 @@ export const Card = ({ titulo, categoria, id, imagem, preco }: CardProps) => {
       bg="white"
       border="3px solid"
       borderColor="gray.400"
+      cursor="progress"
       _hover={{
-        boderColor: "green.400",
+        border: "3px solid",
+        boderColor: "red",
       }}
       m="4"
     >
@@ -71,13 +74,13 @@ export const Card = ({ titulo, categoria, id, imagem, preco }: CardProps) => {
             R$ {preco}
           </Text>
           <Button
-            bg="green.400"
+            bg="gray.500"
             w="100px"
             color="white"
             h="44px"
             borderRadius="8px"
             _hover={{
-              background: "green.300",
+              background: "green.400",
             }}
             onClick={() => {}}
           >
