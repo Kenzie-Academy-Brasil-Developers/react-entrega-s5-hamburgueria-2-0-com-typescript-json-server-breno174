@@ -97,8 +97,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       localStorage.setItem("@Hamburguer:user", JSON.stringify(user));
 
       setData({ accessToken, user });
-
-      await produtsList(accessToken, user.id);
     } catch {
       toast.error("email ou senha invalidos");
     }

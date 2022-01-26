@@ -49,7 +49,12 @@ export const Card = ({ titulo, categoria, id, imagem, preco }: CardProps) => {
           bg="gray.300"
           h="150px"
         >
-          <Image alt={`imagem de `} />
+          <Image
+            alt={`imagem de ${titulo}`}
+            src={imagem}
+            width="200px"
+            height="130px"
+          />
         </Flex>
         <Grid paddingLeft="8px">
           <Text
@@ -59,11 +64,11 @@ export const Card = ({ titulo, categoria, id, imagem, preco }: CardProps) => {
             fontWeight="bold"
             color="gray.600"
           >
-            titulo
+            {titulo}
           </Text>
-          <Text> categoria </Text>
+          <Text> {categoria} </Text>
           <Text color="green.400" fontWeight="bold">
-            preco
+            R$ {preco}
           </Text>
           <Button
             bg="green.400"

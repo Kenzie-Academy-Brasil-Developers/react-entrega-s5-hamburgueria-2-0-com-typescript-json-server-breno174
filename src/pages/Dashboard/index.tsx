@@ -23,6 +23,7 @@ import { useHistory } from "react-router-dom";
 //import { Input } from "../../components/Input";
 import { useAuth } from "../../context/AuthContext";
 import { Card } from "../../components/cards";
+import { useEffect } from "react";
 
 interface ListProps {
   produto: Array<ProdutosProps>[];
@@ -45,7 +46,9 @@ export const Dashboard = () => {
   const [filter, setFilter] = useState("");
   const history = useHistory();
   const { produtsList, product, signOut, user, accessToken } = useAuth();
-
+  useEffect(() => {
+    produtsList(accessToken, user.id);
+  }, []);
   //produtsList(accessToken, user.id);
 
   console.log(product);
@@ -130,14 +133,15 @@ export const Dashboard = () => {
           overflowX={["scroll", "scroll", "auto", "auto"]}
           gap={4}
         >
-          <Card categoria="sanduiche" preco={4} titulo="x-burguer" />
-          <Card categoria="sanduiche" preco={4} titulo="x-queijo" />
-          <Card categoria="sanduiche" preco={4} titulo="x-bacon" />
-          <Card categoria="sanduiche" preco={4} titulo="x-bacon" />
-          <Card categoria="sanduiche" preco={4} titulo="x-bacon" />
-          <Card categoria="sanduiche" preco={4} titulo="x-bacon" />
-          <Card categoria="sanduiche" preco={4} titulo="x-bacon" />
-          <Card categoria="sanduiche" preco={4} titulo="x-bacon" />
+          {product.map((card) => (
+            <Card
+              key={card.id}
+              categoria={card.categoria}
+              preco={card.preco}
+              titulo={card.categoria}
+              imagem={card.imagem}
+            />
+          ))}
         </Flex>
       </Box>
     </Flex>
