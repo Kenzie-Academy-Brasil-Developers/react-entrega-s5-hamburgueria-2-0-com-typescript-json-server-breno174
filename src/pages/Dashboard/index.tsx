@@ -57,11 +57,11 @@ export const Dashboard = () => {
 
   useEffect(() => {
     produtsList(accessToken, user.id);
-    carrinho(accessToken, user.id);
+    carrinho(user.id, accessToken);
   }, []);
 
-  console.log(product);
-  console.log(user, "usuario");
+  console.log(carrProd, "\n carrinho");
+  console.log(user, "\n usuario do auth context");
   return (
     <Flex
       padding={["0px", "0px", "0px", "0px"]}

@@ -1,6 +1,5 @@
 import { Flex, Box, Grid, Button, Image, Text } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
-import { theme } from "../theme/theme";
 
 interface CardProps {
   titulo: string;

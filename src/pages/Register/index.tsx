@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { Input } from "../../components/Input";
+import { Input } from "../../components/form/Input";
 import ShoppingBag from "../../assets/shopping-bag.svg";
 
 import * as yup from "yup";

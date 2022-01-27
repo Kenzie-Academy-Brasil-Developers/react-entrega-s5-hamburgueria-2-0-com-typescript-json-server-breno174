@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { AiFillShopping } from "react-icons/ai";
 import { useState } from "react";
-import { Input } from "../../components/Input";
+import { Input } from "../../components/form/Input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";

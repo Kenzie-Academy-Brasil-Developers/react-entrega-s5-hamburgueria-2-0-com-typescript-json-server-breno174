@@ -84,6 +84,8 @@ const CarrinhoProvider = ({ children }: AuthProviderProps) => {
   };
 
   const carrinho = useCallback(async (userId: string, acessToken: string) => {
+    console.log(userId, "user id");
+    console.log(acessToken, "user token");
     try {
       const response = await api.get(`/carrinho?userId=${userId}`, {
         headers: {
@@ -93,6 +95,7 @@ const CarrinhoProvider = ({ children }: AuthProviderProps) => {
       setcarrProd(response.data);
     } catch (err) {
       console.log(err);
+      console.log("falhou ao tentar pegar o carrinho");
     }
   }, []);
 

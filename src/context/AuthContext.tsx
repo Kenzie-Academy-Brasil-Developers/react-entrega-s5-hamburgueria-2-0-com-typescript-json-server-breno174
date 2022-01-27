@@ -32,11 +32,6 @@ interface AuthContextData {
   signIn: (credentials: SignInCredentials) => Promise<void>;
   signOut: () => void;
   produtsList: (userId: string, accessToken: string) => Promise<void>;
-  openCarr: () => void;
-  closeCarr: () => void;
-  modalCarr: boolean;
-  carrinho: (userId: string, accessToken: string) => Promise<void>;
-  carrProd: IProduts[];
 }
 
 interface User {
@@ -66,8 +61,6 @@ const useAuth = () => {
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [product, setProduct] = useState<IProduts[]>([]);
-  const [modalCarr, setModalCarr] = useState(false);
-  const [carrProd, setcarrProd] = useState<IProduts[]>([]);
 
   const [data, setData] = useState<AuthState>(() => {
     const accessToken = localStorage.getItem("@Hamburguer:accessToken");
@@ -80,31 +73,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     return {} as AuthState;
   });
 
-  const openCarr = () => {
-    setModalCarr(true);
-  };
-
-  const closeCarr = () => {
-    setModalCarr(false);
-  };
-
-  const carrinho = useCallback(async (userId: string, acessToken: string) => {
-    try {
-      const response = await api.get(`/carrinho?userId=${userId}`, {
-        headers: {
-          Authorization: `Bearer ${acessToken}`,
-        },
-      });
-      setcarrProd(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
-
   const produtsList = useCallback(
     async (userId: string, acessToken: string) => {
       try {
-        const response = await api.get(`/produtos?userId=${userId}`, {
+        const response = await api.get(`/produtos`, {
           headers: {
             Authorization: `Bearer ${acessToken}`,
           },
@@ -148,11 +120,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         signOut,
         produtsList,
         product,
-        openCarr,
-        closeCarr,
-        modalCarr,
-        carrinho,
-        carrProd,
       }}
     >
       {children}
