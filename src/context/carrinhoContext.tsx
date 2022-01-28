@@ -26,8 +26,6 @@ interface AuthState {
 }
 
 interface AuthContextData {
-  user: User;
-  accessToken: string;
   openCarr: () => void;
   closeCarr: () => void;
   modalCarr: boolean;
@@ -38,7 +36,22 @@ interface AuthContextData {
     acessToken: string,
     objeto: IPostProduts
   ) => void;
-  subCarrinho: (props: IProduts) => void;
+  subCarrinho: (props: IDeleteProduts, accessToken: string) => void;
+  //removerTodos: ( props: IRemoveAll[], accessToken: string) => void;
+}
+
+interface ListaProds {
+  produtos: IRemoveAll[];
+  forEach?: (elemet: IDeleteProduts) => void;
+}
+
+interface IRemoveAll {
+  titulo: string;
+  categoria: string;
+  imagem: string;
+  preco: number;
+  id: number;
+  forEach?: (elemet: IDeleteProduts) => void;
 }
 
 interface User {
@@ -60,6 +73,15 @@ interface IPostProduts {
   categoria: string;
   imagem: string;
   preco: number;
+  id?: number;
+}
+
+interface IDeleteProduts {
+  titulo: string;
+  categoria: string;
+  imagem: string;
+  preco: number;
+  id: number;
 }
 
 const CarrinhoContext = createContext<AuthContextData>({} as AuthContextData);
@@ -73,21 +95,11 @@ const useAuth = () => {
 
   return context;
 };
+//const { user, accessToken } = useAuth();
 
 const CarrinhoProvider = ({ children }: AuthProviderProps) => {
   const [modalCarr, setModalCarr] = useState(false);
   const [carrProd, setcarrProd] = useState<IProduts[]>([]);
-
-  const [data, setData] = useState<AuthState>(() => {
-    const accessToken = localStorage.getItem("@Hamburguer:accessToken");
-    const user = localStorage.getItem("@Hamburguer:user");
-
-    if (accessToken && user) {
-      return { accessToken, user: JSON.parse(user) };
-    }
-
-    return {} as AuthState;
-  });
 
   const openCarr = () => {
     setModalCarr(true);
@@ -98,20 +110,23 @@ const CarrinhoProvider = ({ children }: AuthProviderProps) => {
   };
 
   const carrinho = useCallback(async (userId: string, acessToken: string) => {
-    console.log("ocorreu o load");
+    //console.log("agora sim\nocorreu o load do carrinho");
     try {
       const response = await api.get(`/carrinho?userId=${userId}`, {
         headers: {
           Authorization: `Bearer ${acessToken}`,
         },
       });
+      //console.log(response.data, "resposta do load do carrinho");
       setcarrProd(response.data);
-      console.log(carrProd);
+      //console.log(carrProd, "carrinho state antes do sett");
     } catch (err) {
       console.log(err);
-      console.log("falhou ao tentar pegar o carrinho");
+      setcarrProd([]);
+      //console.log("load do carrinho falhou ou esta vazio");
     }
   }, []);
+  //console.log(carrProd, "carrinho atual");
 
   const addCarrinho = useCallback(
     async (userId: string, acessToken: string, objeto: IPostProduts) => {
@@ -122,41 +137,57 @@ const CarrinhoProvider = ({ children }: AuthProviderProps) => {
         imagem: objeto.imagem,
         userId: userId,
       };
+
       try {
         const response = await api.post(`/carrinho?userId=${userId}`, data, {
           headers: {
             Authorization: `Bearer ${acessToken}`,
           },
         });
-        setcarrProd(response.data);
-        console.log(response, "\n response do post");
+        setcarrProd([...carrProd, response.data]);
+        //console.log(response.data, "\n response do post");
       } catch (err) {
         console.log(err);
         toast.error("nao adicionou ao carrinho");
       }
+      //console.log(data);
+      //console.log(carrProd, "carrinho atual no provider do add carrinho");
+      carrinho(userId, acessToken);
     },
     []
   );
 
-  const subCarrinho = ({ titulo, categoria, id, imagem, preco }: IProduts) => {
-    console.log(carrProd, "\n carrinho atual");
-    console.log(
-      {
-        titulo,
-        categoria,
-        id,
-        imagem,
-        preco,
-      },
-      "\n objeto passado pro context"
-    );
+  const subCarrinho = async (objeto: IDeleteProduts, acessToken: string) => {
+    //console.log(carrProd, "\n carrinho atual na sub carrinho");
+
+    try {
+      const response = await api.delete(`/carrinho/${objeto.id}`, {
+        headers: {
+          Authorization: `Bearer ${acessToken}`,
+        },
+      });
+      const newcar = carrProd.filter((elemt) => elemt.id !== objeto.id);
+      setcarrProd(newcar);
+      //console.log(newcar, "o que seria o novo carrinho");
+    } catch (err) {
+      console.log(err);
+      //console.log("nao pode deletar");
+    }
   };
+
+  /**
+   * 
+   const removerTodos = async (produtos: ListaProds, acessToken: string) => {
+ 
+     const zerado = produtos.forEach( ( element: IDeleteProduts ) => {
+       subCarrinho(element, acessToken)
+     });
+   };
+   */
 
   return (
     <CarrinhoContext.Provider
       value={{
-        user: data.user,
-        accessToken: data.accessToken,
         openCarr,
         closeCarr,
         modalCarr,
@@ -164,6 +195,7 @@ const CarrinhoProvider = ({ children }: AuthProviderProps) => {
         carrProd,
         addCarrinho,
         subCarrinho,
+        //removerTodos,
       }}
     >
       {children}

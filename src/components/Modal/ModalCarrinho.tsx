@@ -7,22 +7,30 @@ import {
   Button,
   VStack,
 } from "@chakra-ui/react";
+import { stringify } from "querystring";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import { carrAuth } from "../../context/carrinhoContext";
 import { CarrinhoCard } from "../cards/carrinhoCard";
 
 export const Carrinho = () => {
-  const { closeCarr, carrProd, carrinho, user, accessToken } = carrAuth();
+  const { user, accessToken } = useAuth();
+  const { closeCarr, carrProd, carrinho, modalCarr } = carrAuth();
   const [isEmpty, setIsEmpty] = useState(false);
 
   useEffect(() => {
     carrinho(user.id, accessToken);
+  }, [modalCarr]);
+
+  const total = carrProd.reduce((ant, cur) => (ant += cur.preco), 0);
+  useEffect(() => {
+    console.log(total);
     if (carrProd.length >= 1) {
       setIsEmpty(true);
     } else {
       setIsEmpty(false);
     }
-  }, []);
+  }, [carrProd]);
 
   return (
     <Flex
@@ -76,71 +84,84 @@ export const Carrinho = () => {
       >
         {!isEmpty ? (
           <>
-            <Heading as="h3" color="gray.700" fontSize="25px" fontWeight="bold">
+            <Heading
+              mt="30px"
+              as="h3"
+              color="gray.700"
+              fontSize="25px"
+              fontWeight="bold"
+            >
               Sacola está vazia
             </Heading>
-            <Text fontSize="18px" color="gray.500">
+            <Text mb="30px" fontSize="18px" color="gray.500">
               Volte para adicionar um item
             </Text>
           </>
         ) : (
-          <VStack
-            spacing="3"
-            w="100%"
-            h="180px"
-            paddingTop="10px"
-            paddingBottom="10px"
-            overflowY="auto"
-          >
-            {carrProd.map((prod) => (
-              <CarrinhoCard
-                key={prod.id}
-                titulo={prod.titulo}
-                categoria={prod.categoria}
-                preco={prod.preco}
-                imagem={prod.imagem}
-              />
-            ))}
-          </VStack>
-        )}
-        <Flex
-          flexDir="column"
-          alignItems="center"
-          w="100%"
-          as="footer"
-          borderTop="2px solid"
-          borderColor="gray.400"
-          paddingTop="10px"
-          paddingBottom="20px"
-        >
-          <HStack justifyContent="space-evenly" w="100%">
-            <Text
-              paddingLeft="10px"
-              color="gray.700"
-              fontWeight="bold"
-              fontSize="20px"
+          <>
+            <VStack
+              spacing="3"
+              w="100%"
+              h="180px"
+              paddingTop="10px"
+              paddingBottom="10px"
+              overflowY="auto"
             >
-              Total
-            </Text>
-            <Text paddingRight="10px" color="gray.500" fontSize="20px">
-              {" "}
-              R$ numero total{" "}
-            </Text>
-          </HStack>
-          <Button
-            bg="gray.400"
-            fontSize="20px"
-            padding="29px 25px"
-            w="90%"
-            _hover={{
-              bg: "green.500",
-              color: "white",
-            }}
-            onClick={() => {}}
-          >
-            Remover todos
-          </Button>
-        </Flex>
+              {carrProd.map((prod) => (
+                <CarrinhoCard
+                  key={prod.id}
+                  titulo={prod.titulo}
+                  categoria={prod.categoria}
+                  preco={prod.preco}
+                  imagem={prod.imagem}
+                  id={prod.id}
+                />
+              ))}
+            </VStack>
+            <Flex
+              flexDir="column"
+              alignItems="center"
+              w="100%"
+              as="footer"
+              borderTop="2px solid"
+              borderColor="gray.400"
+              paddingTop="10px"
+              paddingBottom="20px"
+            >
+              <HStack justifyContent="space-evenly" w="100%">
+                <Text
+                  paddingLeft="10px"
+                  color="gray.700"
+                  fontWeight="bold"
+                  fontSize="20px"
+                >
+                  Total
+                </Text>
+                <Text
+                  paddingRight="10px"
+                  color="gray.600"
+                  fontWeight="bold"
+                  fontSize="20px"
+                >
+                  R$ {total}
+                </Text>
+              </HStack>
+              <Button
+                bg="gray.400"
+                fontSize="20px"
+                padding="29px 25px"
+                w="90%"
+                _hover={{
+                  bg: "green.500",
+                  color: "white",
+                }}
+                onClick={() => {}}
+              >
+                Remover todos
+              </Button>
+            </Flex>
+          </>
+        )}
       </Flex>
     </Flex>
   );

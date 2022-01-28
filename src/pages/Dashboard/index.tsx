@@ -44,11 +44,10 @@ export const Dashboard = () => {
   const { carrinho, closeCarr, openCarr, carrProd, modalCarr } = carrAuth();
 
   useEffect(() => {
-    console.log("useEffect");
+    //console.log("useEffect da Dashboard");
     produtsList(user.id, accessToken);
     carrinho(user.id, accessToken);
   }, []);
-
   //console.log(carrProd, "\n carrinho");
   //console.log(user, "\n usuario do auth context");
   return (
@@ -57,10 +56,11 @@ export const Dashboard = () => {
         <Box
           position="absolute"
           zIndex="1"
-          w="100vw"
+          w="100%"
           h="100vh"
           bg="black"
           opacity="30%"
+          onClick={() => {}}
         ></Box>
       ) : (
         false
@@ -147,8 +147,15 @@ export const Dashboard = () => {
             />
           </HStack>
         </HStack>
-        <Box w="100%" h="89%" mt="5" paddingX="15px">
+        <Box
+          w="100%"
+          h="89%"
+          mt="5"
+          paddingX={["15px 0px", "15px 0px", "15px", "15px"]}
+          overflowY="auto"
+        >
           <Flex
+            h={["400px", "400px", "100%", "100%"]}
             justifyContent={["flex-start", "flex-start", "center", "center"]}
             alignItems="center"
             wrap={["nowrap", "nowrap", "wrap", "wrap"]}

@@ -30,8 +30,9 @@ export const CarrinhoCard = ({
   categoria,
   imagem,
   preco,
-}: OmitIdCard) => {
-  const { addCarrinho } = carrAuth();
+  id,
+}: CardProps) => {
+  const { addCarrinho, subCarrinho } = carrAuth();
   const { accessToken, user } = useAuth();
 
   const buget = useRef({
@@ -39,8 +40,8 @@ export const CarrinhoCard = ({
     categoria,
     imagem,
     preco,
+    id,
   });
-  //console.log(buget, "\n carteira");
 
   return (
     <Box w="100%" p="0px 15px 0px 15px">
@@ -70,7 +71,7 @@ export const CarrinhoCard = ({
                   bg: "green.500",
                   color: "white",
                 }}
-                onClick={() => {}}
+                onClick={() => subCarrinho(buget.current, accessToken)}
               >
                 -
               </Button>
@@ -83,7 +84,7 @@ export const CarrinhoCard = ({
                 alignItems="flex-start"
                 ml="0px"
               >
-                10
+                1
               </Grid>
               <Button
                 bg="gray.400"
@@ -104,7 +105,7 @@ export const CarrinhoCard = ({
             as={FaTrash}
             fontSize="22px"
             cursor="pointer"
-            onClickCapture={() => console.log("deletou o item do carrinho")}
+            onClickCapture={() => subCarrinho(buget.current, accessToken)}
           />
         </Flex>
       </HStack>
