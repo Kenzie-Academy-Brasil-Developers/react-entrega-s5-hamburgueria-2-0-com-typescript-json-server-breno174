@@ -33,6 +33,12 @@ interface AuthContextData {
   modalCarr: boolean;
   carrinho: (userId: string, accessToken: string) => Promise<void>;
   carrProd: IProduts[];
+  addCarrinho: (
+    userId: string,
+    acessToken: string,
+    objeto: IPostProduts
+  ) => void;
+  subCarrinho: (props: IProduts) => void;
 }
 
 interface User {
@@ -46,6 +52,14 @@ interface IProduts {
   imagem: string;
   preco: number;
   id: number;
+  userId: number;
+}
+
+interface IPostProduts {
+  titulo: string;
+  categoria: string;
+  imagem: string;
+  preco: number;
 }
 
 const CarrinhoContext = createContext<AuthContextData>({} as AuthContextData);
@@ -84,8 +98,7 @@ const CarrinhoProvider = ({ children }: AuthProviderProps) => {
   };
 
   const carrinho = useCallback(async (userId: string, acessToken: string) => {
-    console.log(userId, "user id");
-    console.log(acessToken, "user token");
+    console.log("ocorreu o load");
     try {
       const response = await api.get(`/carrinho?userId=${userId}`, {
         headers: {
@@ -93,11 +106,51 @@ const CarrinhoProvider = ({ children }: AuthProviderProps) => {
         },
       });
       setcarrProd(response.data);
+      console.log(carrProd);
     } catch (err) {
       console.log(err);
       console.log("falhou ao tentar pegar o carrinho");
     }
   }, []);
+
+  const addCarrinho = useCallback(
+    async (userId: string, acessToken: string, objeto: IPostProduts) => {
+      const data = {
+        titulo: objeto.titulo,
+        categoria: objeto.categoria,
+        preco: objeto.preco,
+        imagem: objeto.imagem,
+        userId: userId,
+      };
+      try {
+        const response = await api.post(`/carrinho?userId=${userId}`, data, {
+          headers: {
+            Authorization: `Bearer ${acessToken}`,
+          },
+        });
+        setcarrProd(response.data);
+        console.log(response, "\n response do post");
+      } catch (err) {
+        console.log(err);
+        toast.error("nao adicionou ao carrinho");
+      }
+    },
+    []
+  );
+
+  const subCarrinho = ({ titulo, categoria, id, imagem, preco }: IProduts) => {
+    console.log(carrProd, "\n carrinho atual");
+    console.log(
+      {
+        titulo,
+        categoria,
+        id,
+        imagem,
+        preco,
+      },
+      "\n objeto passado pro context"
+    );
+  };
 
   return (
     <CarrinhoContext.Provider
@@ -109,6 +162,8 @@ const CarrinhoProvider = ({ children }: AuthProviderProps) => {
         modalCarr,
         carrinho,
         carrProd,
+        addCarrinho,
+        subCarrinho,
       }}
     >
       {children}

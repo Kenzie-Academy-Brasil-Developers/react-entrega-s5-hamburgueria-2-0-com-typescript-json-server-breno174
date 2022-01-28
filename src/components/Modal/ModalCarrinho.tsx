@@ -94,10 +94,10 @@ export const Carrinho = () => {
           >
             {carrProd.map((prod) => (
               <CarrinhoCard
+                key={prod.id}
+                titulo={prod.titulo}
                 categoria={prod.categoria}
                 preco={prod.preco}
-                titulo={prod.titulo}
-                key={prod.id}
                 imagem={prod.imagem}
               />
             ))}
@@ -136,6 +136,7 @@ export const Carrinho = () => {
               bg: "green.500",
               color: "white",
             }}
+            onClick={() => {}}
           >
             Remover todos
           </Button>

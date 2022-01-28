@@ -1,32 +1,26 @@
 import { Flex, Box, Grid, Button, Image, Text } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { carrAuth } from "../../context/carrinhoContext";
 
 interface CardProps {
   titulo: string;
-  id?: number;
+  id: number;
   preco: number;
-  imagem?: string;
+  imagem: string;
   categoria: string;
 }
-type CardVariationOptions = {
-  [key: string]: string;
-};
-
-const CardVariation: CardVariationOptions = {
-  default: "green.400",
-  focus: "green.300",
-};
 
 export const Card = ({ titulo, categoria, id, imagem, preco }: CardProps) => {
-  const [valide, setValid] = useState(false);
-
-  const [variation, setVariation] = useState("default");
-
-  const handleCardFocus = useCallback(() => {
-    if (!valide) {
-      setVariation("focus");
-    }
-  }, [valide]);
+  const { addCarrinho } = carrAuth();
+  const { accessToken, user } = useAuth();
+  const produto = {
+    titulo: titulo,
+    categoria: categoria,
+    id: id,
+    imagem: imagem,
+    preco: preco,
+  };
 
   return (
     <Box
@@ -81,7 +75,7 @@ export const Card = ({ titulo, categoria, id, imagem, preco }: CardProps) => {
             _hover={{
               background: "green.400",
             }}
-            onClick={() => {}}
+            onClick={() => addCarrinho(user.id, accessToken, produto)}
           >
             Adicionar
           </Button>

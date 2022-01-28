@@ -10,24 +10,38 @@ import {
   Heading,
   Icon,
 } from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef } from "react";
 import { FaTrash } from "react-icons/fa";
+import { carrAuth } from "../../context/carrinhoContext";
+import { useAuth } from "../../context/AuthContext";
 
 interface CardProps {
   titulo: string;
-  id?: number;
-  preco: number;
-  imagem?: string;
   categoria: string;
+  imagem: string;
+  preco: number;
+  id: number;
 }
+
+type OmitIdCard = Omit<CardProps, "id">;
 
 export const CarrinhoCard = ({
   titulo,
   categoria,
-  id,
   imagem,
   preco,
-}: CardProps) => {
+}: OmitIdCard) => {
+  const { addCarrinho } = carrAuth();
+  const { accessToken, user } = useAuth();
+
+  const buget = useRef({
+    titulo,
+    categoria,
+    imagem,
+    preco,
+  });
+  //console.log(buget, "\n carteira");
+
   return (
     <Box w="100%" p="0px 15px 0px 15px">
       <HStack>
@@ -80,7 +94,7 @@ export const CarrinhoCard = ({
                   bg: "green.500",
                   color: "white",
                 }}
-                onClick={() => {}}
+                onClick={() => addCarrinho(user.id, accessToken, buget.current)}
               >
                 +
               </Button>
@@ -89,6 +103,7 @@ export const CarrinhoCard = ({
           <Icon
             as={FaTrash}
             fontSize="22px"
+            cursor="pointer"
             onClickCapture={() => console.log("deletou o item do carrinho")}
           />
         </Flex>
