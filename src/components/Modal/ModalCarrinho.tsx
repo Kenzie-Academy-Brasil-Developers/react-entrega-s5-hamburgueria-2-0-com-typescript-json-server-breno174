@@ -34,11 +34,11 @@ export const Carrinho = () => {
 
   return (
     <Flex
-      w="430px"
+      w={["280px", "320px", "430px", "430px"]}
       bg="white"
       position="absolute"
-      top="35%"
-      left="33%"
+      top={["20vh", "20vh", "35%", "35%"]}
+      left={["8vmax", "25vw", "28vw", "44vw"]}
       flexDirection="column"
       border="2px solid"
       borderColor="gray.500"

@@ -37,7 +37,6 @@ interface AuthContextData {
     objeto: IPostProduts
   ) => void;
   subCarrinho: (props: IDeleteProduts, accessToken: string) => void;
-  //removerTodos: ( props: IRemoveAll[], accessToken: string) => void;
 }
 
 interface ListaProds {
@@ -95,7 +94,6 @@ const useAuth = () => {
 
   return context;
 };
-//const { user, accessToken } = useAuth();
 
 const CarrinhoProvider = ({ children }: AuthProviderProps) => {
   const [modalCarr, setModalCarr] = useState(false);
@@ -110,23 +108,18 @@ const CarrinhoProvider = ({ children }: AuthProviderProps) => {
   };
 
   const carrinho = useCallback(async (userId: string, acessToken: string) => {
-    //console.log("agora sim\nocorreu o load do carrinho");
     try {
       const response = await api.get(`/carrinho?userId=${userId}`, {
         headers: {
           Authorization: `Bearer ${acessToken}`,
         },
       });
-      //console.log(response.data, "resposta do load do carrinho");
       setcarrProd(response.data);
-      //console.log(carrProd, "carrinho state antes do sett");
     } catch (err) {
       console.log(err);
       setcarrProd([]);
-      //console.log("load do carrinho falhou ou esta vazio");
     }
   }, []);
-  //console.log(carrProd, "carrinho atual");
 
   const addCarrinho = useCallback(
     async (userId: string, acessToken: string, objeto: IPostProduts) => {
@@ -145,21 +138,16 @@ const CarrinhoProvider = ({ children }: AuthProviderProps) => {
           },
         });
         setcarrProd([...carrProd, response.data]);
-        //console.log(response.data, "\n response do post");
       } catch (err) {
         console.log(err);
         toast.error("nao adicionou ao carrinho");
       }
-      //console.log(data);
-      //console.log(carrProd, "carrinho atual no provider do add carrinho");
       carrinho(userId, acessToken);
     },
     []
   );
 
   const subCarrinho = async (objeto: IDeleteProduts, acessToken: string) => {
-    //console.log(carrProd, "\n carrinho atual na sub carrinho");
-
     try {
       const response = await api.delete(`/carrinho/${objeto.id}`, {
         headers: {
@@ -168,22 +156,10 @@ const CarrinhoProvider = ({ children }: AuthProviderProps) => {
       });
       const newcar = carrProd.filter((elemt) => elemt.id !== objeto.id);
       setcarrProd(newcar);
-      //console.log(newcar, "o que seria o novo carrinho");
     } catch (err) {
       console.log(err);
-      //console.log("nao pode deletar");
     }
   };
-
-  /**
-   * 
-   const removerTodos = async (produtos: ListaProds, acessToken: string) => {
- 
-     const zerado = produtos.forEach( ( element: IDeleteProduts ) => {
-       subCarrinho(element, acessToken)
-     });
-   };
-   */
 
   return (
     <CarrinhoContext.Provider
@@ -195,7 +171,6 @@ const CarrinhoProvider = ({ children }: AuthProviderProps) => {
         carrProd,
         addCarrinho,
         subCarrinho,
-        //removerTodos,
       }}
     >
       {children}

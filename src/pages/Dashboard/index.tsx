@@ -8,6 +8,7 @@ import {
   Icon,
   Text,
   VStack,
+  SimpleGrid,
   Input,
 } from "@chakra-ui/react";
 import {
@@ -37,19 +38,14 @@ export const Dashboard = () => {
   const [filterValue, setFilterValue] = useState("");
   const history = useHistory();
 
-  //oque fazer com o filterValue ?
-
   const { produtsList, product, signOut, user, accessToken } = useAuth();
 
   const { carrinho, closeCarr, openCarr, carrProd, modalCarr } = carrAuth();
 
   useEffect(() => {
-    //console.log("useEffect da Dashboard");
     produtsList(user.id, accessToken);
     carrinho(user.id, accessToken);
   }, []);
-  //console.log(carrProd, "\n carrinho");
-  //console.log(user, "\n usuario do auth context");
   return (
     <>
       {modalCarr ? (
@@ -87,7 +83,7 @@ export const Dashboard = () => {
               <Heading as="h3" color="gray.700">
                 Burguer
               </Heading>
-              <Text color="red.400">
+              <Text color="red.400" fontSize="20px">
                 <b>Kenzie</b>
               </Text>
             </HStack>
@@ -97,13 +93,15 @@ export const Dashboard = () => {
             <HStack
               bg="white"
               borderRadius="8px"
-              border="1px solid gray.600"
+              border="2px solid"
+              borderColor="gray.400"
               padding="8px"
             >
               <Input
                 bg="transparent"
                 border="none"
                 onChange={(e) => setFilterValue(e.target.value)}
+                placeholder="digite sua pesquisa"
                 h="50px"
                 size="lg"
               />
@@ -115,11 +113,13 @@ export const Dashboard = () => {
                 h="50px"
                 fontSize="1xl"
                 bg="green.400"
+                paddingX={["22px", "25px", "28px", "30px"]}
               >
                 <Icon
                   as={AiOutlineSearch}
                   color="white"
                   fontSize="25px"
+                  fontWeight="bold"
                   onClick={() => setIsFilter(true)}
                 />
               </Center>
@@ -127,40 +127,50 @@ export const Dashboard = () => {
             {!modalCarr ? (
               <Icon
                 as={AiOutlineShoppingCart}
-                fontSize={["25px", "25px", "33px", "33px"]}
+                fontSize={["26px", "33px", "33px", "33px"]}
                 onClick={() => openCarr()}
                 cursor="pointer"
               />
             ) : (
               <Icon
                 as={AiOutlineShoppingCart}
-                fontSize={["25px", "25px", "33px", "33px"]}
+                fontSize={["26px", "33px", "33px", "33px"]}
                 onClick={() => closeCarr()}
                 cursor="pointer"
               />
             )}
             <Icon
               as={AiOutlineExport}
-              fontSize={["25px", "25px", "33px", "33px"]}
+              fontSize={["26px", "33px", "33px", "33px"]}
               onClick={() => signOut()}
               cursor="pointer"
             />
           </HStack>
         </HStack>
-        <Box
+        <Flex
           w="100%"
           h="89%"
           mt="5"
           paddingX={["15px 0px", "15px 0px", "15px", "15px"]}
           overflowY="auto"
+          justifyContent="center"
         >
           <Flex
             h={["400px", "400px", "100%", "100%"]}
-            justifyContent={["flex-start", "flex-start", "center", "center"]}
+            w="90%"
+            gridColumn={4}
+            justifyContent={[
+              "flex-start",
+              "flex-start",
+              "center",
+              "flex-start",
+            ]}
+            alignSelf="center"
             alignItems="center"
+            alignContent={["flex-start", "flex-start", "center", "flex-start"]}
             wrap={["nowrap", "nowrap", "wrap", "wrap"]}
             overflowX={["scroll", "scroll", "auto", "auto"]}
-            gap={4}
+            gap={3}
           >
             {isFilter
               ? carrProd.map((card) => (
@@ -184,7 +194,7 @@ export const Dashboard = () => {
                   />
                 ))}
           </Flex>
-        </Box>
+        </Flex>
       </Flex>
     </>
   );

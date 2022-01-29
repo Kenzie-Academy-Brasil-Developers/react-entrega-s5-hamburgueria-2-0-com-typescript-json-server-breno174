@@ -25,7 +25,8 @@ export const Card = ({ titulo, categoria, id, imagem, preco }: CardProps) => {
   return (
     <Box
       h="310px"
-      minWidth="250px"
+      minWidth="300px"
+      maxWidth="300px"
       padding="10px 10px"
       bg="white"
       border="3px solid"
