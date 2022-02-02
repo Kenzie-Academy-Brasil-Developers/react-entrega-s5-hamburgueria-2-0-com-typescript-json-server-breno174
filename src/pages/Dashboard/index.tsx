@@ -1,47 +1,18 @@
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Heading,
-  HStack,
-  Icon,
-  Text,
-  VStack,
-  SimpleGrid,
-  Input,
-} from "@chakra-ui/react";
-import {
-  AiOutlineShoppingCart,
-  AiOutlineSearch,
-  AiOutlineExport,
-} from "react-icons/ai";
+import { Box, Flex } from "@chakra-ui/react";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import { Carrinho } from "../../components/Modal/ModalCarrinho";
 import { useAuth } from "../../context/AuthContext";
 import { Card } from "../../components/cards/cards";
 import { useEffect } from "react";
-//import { VerticallyCenter } from "../../components/Modal/ModalExemplo";
 import { carrAuth } from "../../context/carrinhoContext";
 import { Header } from "../../components/Header";
 
-interface ProdutosProps {
-  titulo: string;
-  id: number;
-  preco: number;
-  imagem: string;
-  categoria: string;
-}
-
 export const Dashboard = () => {
   const [isFilter, setIsFilter] = useState(false);
-  const [filterValue, setFilterValue] = useState("");
-  const history = useHistory();
 
-  const { produtsList, product, signOut, user, accessToken } = useAuth();
+  const { produtsList, product, user, accessToken } = useAuth();
 
-  const { carrinho, closeCarr, openCarr, carrProd, modalCarr } = carrAuth();
+  const { carrinho, carrProd, modalCarr } = carrAuth();
 
   useEffect(() => {
     produtsList(user.id, accessToken);
@@ -90,7 +61,6 @@ export const Dashboard = () => {
               w="100%"
               gridColumn={4}
               justifyContent={["flex-start", "flex-start", "center", "center"]}
-              //alignSelf="center"
               alignItems="center"
               alignContent={[
                 "flex-start",

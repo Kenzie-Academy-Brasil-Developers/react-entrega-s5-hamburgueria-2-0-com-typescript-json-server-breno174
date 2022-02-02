@@ -4,13 +4,12 @@ import {
   Grid,
   Button,
   Image,
-  Text,
   HStack,
   VStack,
   Heading,
   Icon,
 } from "@chakra-ui/react";
-import { useCallback, useState, useRef } from "react";
+import { useRef } from "react";
 import { FaTrash } from "react-icons/fa";
 import { carrAuth } from "../../context/carrinhoContext";
 import { useAuth } from "../../context/AuthContext";
@@ -23,7 +22,7 @@ interface CardProps {
   id: number;
 }
 
-type OmitIdCard = Omit<CardProps, "id">;
+//type OmitIdCard = Omit<CardProps, "id">;
 
 export const CarrinhoCard = ({
   titulo,
@@ -46,8 +45,8 @@ export const CarrinhoCard = ({
   return (
     <Box w="100%" p="0px 15px 0px 15px">
       <HStack>
-        <Box bg="gray.300">
-          <Image alt="img de algo" />
+        <Box w="84px" h="50px">
+          <Image alt="img de algo" src={imagem} />
         </Box>
         <Flex w="90%" justifyContent="space-between">
           <VStack alignItems="flex-start" paddingLeft="10px">

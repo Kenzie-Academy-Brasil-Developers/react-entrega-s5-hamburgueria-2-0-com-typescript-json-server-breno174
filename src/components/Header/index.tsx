@@ -1,14 +1,10 @@
 import {
   Box,
-  Button,
   Center,
-  Flex,
   Heading,
   HStack,
   Icon,
   Text,
-  VStack,
-  SimpleGrid,
   Input,
 } from "@chakra-ui/react";
 import {
@@ -17,12 +13,7 @@ import {
   AiOutlineExport,
 } from "react-icons/ai";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Carrinho } from "../../components/Modal/ModalCarrinho";
 import { useAuth } from "../../context/AuthContext";
-import { Card } from "../../components/cards/cards";
-import { useEffect } from "react";
-//import { VerticallyCenter } from "../../components/Modal/ModalExemplo";
 import { carrAuth } from "../../context/carrinhoContext";
 
 interface VerificarProps2 {
