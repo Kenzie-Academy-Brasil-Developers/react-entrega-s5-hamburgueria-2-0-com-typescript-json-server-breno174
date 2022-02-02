@@ -1,13 +1,4 @@
-import {
-  Heading,
-  Flex,
-  Box,
-  Text,
-  HStack,
-  Button,
-  VStack,
-} from "@chakra-ui/react";
-import { stringify } from "querystring";
+import { Heading, Flex, Text, HStack, Button, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { carrAuth } from "../../context/carrinhoContext";

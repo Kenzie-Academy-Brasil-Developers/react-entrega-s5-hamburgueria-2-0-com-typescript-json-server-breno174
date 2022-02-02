@@ -32,9 +32,13 @@ export const Card = ({ titulo, categoria, id, imagem, preco }: CardProps) => {
       border="3px solid"
       borderColor="gray.400"
       cursor="progress"
+      //_hover={{
+      //  border: "3px solid",
+      //  boderColor: "red",
+      //}}
       _hover={{
-        border: "3px solid",
-        boderColor: "red",
+        borderColor: "green.400",
+        "div > button": { bg: "green.400" },
       }}
       m="4"
     >
